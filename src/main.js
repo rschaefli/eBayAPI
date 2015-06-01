@@ -1,7 +1,7 @@
 var http = require("http");
 
 var apiKey = "RicardoS-0c4e-433c-9c47-b233462c797d";
-var query = "harry%20potter%20phoenix";
+var query = "pokemon%20base%20set%20first%20edition%20booster%20box";
 
 http.get("http://svcs.ebay.com/services/search/FindingService/v1?" +
           "OPERATION-NAME=findItemsByKeywords" +
