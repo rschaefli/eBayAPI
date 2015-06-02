@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "node-schedule": "^0.2.8"
+  }
+}
