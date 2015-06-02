@@ -24,11 +24,10 @@ var makeApiQuery = function(cb) {
 
     res.on('end', function () {
       var result = JSON.parse(body);
-      cb(result);
+      cb(undefined, result);
     });
-  }).on('error', function(e) {
-    console.log("Got error: " + e.message);
-    cb(undefined);
+  }).on('error', function(err) {
+    cb(err);
   });
 }
 
@@ -36,8 +35,12 @@ var makeApiQuery = function(cb) {
 schedule.scheduleJob(cronPattern, function() {
     console.log('Cron job running..');
 
-    makeApiQuery(function callback(result) {
-      console.log(result.findItemsByKeywordsResponse[0].searchResult[0].item[0]);
-      console.log(result.findItemsByKeywordsResponse[0].paginationOutput);
+    makeApiQuery(function callback(err, result) {
+      if(err) {
+        console.log("Got error: " + err);
+      } else {
+        console.log(result.findItemsByKeywordsResponse[0].searchResult[0].item[0]);
+        console.log(result.findItemsByKeywordsResponse[0].paginationOutput);
+      }
     });
 });
