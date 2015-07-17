@@ -1,0 +1,19 @@
+- Use Docker Compose to bring up an Elasticsearch along with the node app
+- Modify the node app to write the response from the eBay API to elasticsearch
+- Build a UI front-end to the app
+    - Expose a port in docker-compose.yml
+    - Query the contents of the Elasticsearch index
+
+
+Down the line:
+- How to structure the data in Elasticsearch?
+    - Results for different queries need to be organized somehow
+- Do we want to use Elasticsearch as persistent storage, then bring up another instance to act as the searchable index?
+- We will need a persistent data store for
+    - User account info
+    - Queries that users create
+    - Management of eBay queries
+    - Turning cron jobs on and off...should each query cron be running in it's own docker container?
+        - This would mean the app is pretty dumb, it just dumps results to ES
+        - We would need another display and interaction app which does all the UI and user interactions....but that makes sense
+        - The UI app will also have to manage the running cron containers
