@@ -4,8 +4,9 @@ MAINTAINER Ricardo Schaefli
 # Install nginx
 RUN apt-get update && apt-get install -y \
   git \
-  npm \  
-  nodejs
+  npm \
+  nodejs \
+  build-essential
 
 # Set time zone to match host
 RUN rm /etc/localtime && ln -s /usr/share/zoneinfo/US/Pacific /etc/localtime && date

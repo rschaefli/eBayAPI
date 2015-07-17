@@ -2,3 +2,4 @@ ebayapi:
   build: .
   volumes:
    - ./container:/opt/ebayapi
+   - ./src:/opt/ebayapi/app

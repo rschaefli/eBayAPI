@@ -1,6 +1,7 @@
 #!/bin/bash
 
-while true
-do
-  sleep 3600
-done
+cd /opt/ebayapi/app
+
+npm install
+
+nodejs main.js
