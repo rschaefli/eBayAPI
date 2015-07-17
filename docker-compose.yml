@@ -1,5 +1,9 @@
 ebayapi:
   build: .
   volumes:
-   - ./container:/opt/ebayapi
-   - ./src:/opt/ebayapi/app
+    - ./container:/opt/ebayapi
+    - ./src:/opt/ebayapi/app
+  links:
+    - elasticsearch
+elasticsearch:
+  image: elasticsearch:1.6.0
