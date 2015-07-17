@@ -1,0 +1,4 @@
+ebayapi:
+  build: .
+  volumes:
+   - ./container:/opt/ebayapi

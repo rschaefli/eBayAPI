@@ -11,4 +11,4 @@ RUN apt-get update && apt-get install -y \
 RUN rm /etc/localtime && ln -s /usr/share/zoneinfo/US/Pacific /etc/localtime && date
 
 EXPOSE 8080
-ENTRYPOINT ["/bin/bash", "/opt/app/startup.sh"]
+ENTRYPOINT ["/bin/bash", "/opt/ebayapi/startup.sh"]
