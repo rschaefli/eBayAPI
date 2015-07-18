@@ -1,5 +1,6 @@
 var http = require("http");
 var schedule = require('node-schedule');
+var indexer = require('./es-indexer');
 
 var apiKey = "RicardoS-0c4e-433c-9c47-b233462c797d";
 var query = "pokemon%20base%20set%20first%20edition%20booster%20box";
@@ -39,8 +40,16 @@ schedule.scheduleJob(cronPattern, function() {
       if(err) {
         console.log("Got error: " + err);
       } else {
-        console.log(result.findItemsByKeywordsResponse[0].searchResult[0].item[0]);
-        console.log(result.findItemsByKeywordsResponse[0].paginationOutput);
+        var result = result.findItemsByKeywordsResponse[0];
+        //var totalEntries = result.paginationOutput[0].totalEntries[0];
+
+        // TODO: Handle pagination. This only handles the first page.
+        // This will also likely throw an exception for results > 100
+        result.searchResult[0].item.forEach(function(item) {
+          console.log(item);
+        });
+        // console.log(result.findItemsByKeywordsResponse[0].searchResult[0].item[0]);
+        // console.log(result.findItemsByKeywordsResponse[0].paginationOutput);
       }
     });
 });

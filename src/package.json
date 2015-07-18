@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "node-schedule": "^0.2.8"
+    "node-schedule": "^0.2.8",
+    "elasticsearch": "^5.0.0"
   }
 }
