@@ -46,10 +46,15 @@ schedule.scheduleJob(cronPattern, function() {
         // TODO: Handle pagination. This only handles the first page.
         // This will also likely throw an exception for results > 100
         result.searchResult[0].item.forEach(function(item) {
-          console.log(item);
+          //console.log(item);
+          indexer(item.itemId[0], item, function(err, response) {
+            if(err){
+              console.error("Encountered an error indexing!", err);
+            } else {
+              console.log("Response from ES index request: " + response);
+            }
+          })
         });
-        // console.log(result.findItemsByKeywordsResponse[0].searchResult[0].item[0]);
-        // console.log(result.findItemsByKeywordsResponse[0].paginationOutput);
       }
     });
 });

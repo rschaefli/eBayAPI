@@ -7,11 +7,11 @@ var client = new elasticsearch.Client({
 var index = "ebay";
 var type = "searchResults";
 
-module.exports = function(data, callback) {
+module.exports = function(id, data, callback) {
   client.index({
     index: index,
     type: type,
-    id: data.id,
+    id: id,
     body: data
   }, function (error, response) {
     if(error) {
