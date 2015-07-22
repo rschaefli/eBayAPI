@@ -1,7 +1,3 @@
-- Parameterize the hardcoding of boot2docker ip address at runtime/in config file
-- Mount Elasticsearch data directory
-- Use Docker Compose to bring up an Elasticsearch along with the node app
-- Modify the node app to write the response from the eBay API to elasticsearch
 - Build a UI front-end to the app
     - Expose a port in docker-compose.yml
     - Query the contents of the Elasticsearch index

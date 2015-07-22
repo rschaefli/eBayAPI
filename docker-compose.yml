@@ -5,6 +5,8 @@ ebayapi:
     - ./src:/opt/ebayapi/app
   links:
     - elasticsearch
+  environment:
+    BOOT2DOCKER_HOST: 192.168.59.103
 elasticsearch:
   image: elasticsearch:1.6.0
   volumes:
