@@ -5,7 +5,7 @@ ebayapi:
     - ./src:/opt/ebayapi/app
   links:
     - elasticsearch
-  ports:
-    - 9200:9200
 elasticsearch:
   image: elasticsearch:1.6.0
+  ports:
+    - 9200:9200
