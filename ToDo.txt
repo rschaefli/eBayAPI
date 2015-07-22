@@ -1,3 +1,5 @@
+- Parameterize the hardcoding of boot2docker ip address at runtime/in config file
+- Mount Elasticsearch data directory
 - Use Docker Compose to bring up an Elasticsearch along with the node app
 - Modify the node app to write the response from the eBay API to elasticsearch
 - Build a UI front-end to the app
@@ -17,3 +19,9 @@ Down the line:
         - This would mean the app is pretty dumb, it just dumps results to ES
         - We would need another display and interaction app which does all the UI and user interactions....but that makes sense
         - The UI app will also have to manage the running cron containers
+
+
+
+NOTES
+- Queries should query by time if possible, querying since the LAST query
+    - Can use the cron interval to determine to search only X minutes/hours/whatever since the last query

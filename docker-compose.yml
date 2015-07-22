@@ -7,5 +7,7 @@ ebayapi:
     - elasticsearch
 elasticsearch:
   image: elasticsearch:1.6.0
+  volumes:
+    - /Users/rix/data/esdata:/usr/share/elasticsearch/data
   ports:
     - 9200:9200
