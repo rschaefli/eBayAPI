@@ -1,10 +1,11 @@
 var elasticsearch = require('elasticsearch');
 var client = new elasticsearch.Client({
-  host: '192.168.59.103:9200',
+  host: process.env.ELASTICSEARCH_HOST + ':9200',
   log: 'trace'
 });
 
-var index = "ebay";
+//var index = "ebay";
+var index = "test";
 var type = "searchResults";
 
 module.exports = function(id, data, callback) {

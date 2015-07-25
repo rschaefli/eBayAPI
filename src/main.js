@@ -3,19 +3,24 @@ var schedule = require('node-schedule');
 var indexer = require('./es-indexer');
 
 var apiKey = "RicardoS-0c4e-433c-9c47-b233462c797d";
-var query = "pokemon%20base%20set%20first%20edition%20booster%20box";
+//var operationName="findItemsByKeywords";
+//var responseFieldName="findItemsByKeywordsResponse";
+var operationName="findCompletedItems";
+var responseFieldName="findCompletedItemsResponse";
+//var query = "pokemon base set first edition booster box";
+var query="apple iphone 5"
 
 var cronPattern = "* * * * *";
 
-
-var makeApiQuery = function(cb) {
+var makeApiQuery = function(args, cb) {
   http.get("http://svcs.ebay.com/services/search/FindingService/v1?" +
-            "OPERATION-NAME=findItemsByKeywords" +
+            "OPERATION-NAME=" + operationName +
             "&SERVICE-VERSION=1.0.0" +
             "&SECURITY-APPNAME=" + apiKey +
             "&RESPONSE-DATA-FORMAT=JSON" +
             "&REST-PAYLOAD" +
-            "&keywords=" + query, function(res) {
+            "&keywords=" + query +
+            "&paginationInput.pageNumber=" + args.currentPage, function(res) {
 
     var body = '';
 
@@ -33,28 +38,43 @@ var makeApiQuery = function(cb) {
 }
 
 
-schedule.scheduleJob(cronPattern, function() {
-    console.log('Cron job running..');
+//schedule.scheduleJob(cronPattern, function() {
+//    console.log('Cron job running..');
+    //TODO: Rename to queryArgs, store query and operationName in here as well?
+    var args = {};
+    args.currentPage = 1;
+    args.maxPages = 100;
 
-    makeApiQuery(function callback(err, result) {
-      if(err) {
-        console.log("Got error: " + err);
+    getAllResults(args);
+//});
+
+function getAllResults(args) {
+  makeApiQuery(args, function callback(err, result) {
+    if(err) {
+      console.log("Got error: " + err);
+    } else {
+      var result = result[responseFieldName][0];
+      // Process each item in the results
+      result.searchResult[0].item.forEach(function(item) {
+        item.searchQuery = query;
+        // Index each item with Elasticsearch
+        indexer(item.itemId[0], item, function(err, response) {
+          if(err){
+            console.error("Encountered an error indexing!", err);
+          } else {
+            console.log("Response from ES index request: " + response);
+          }
+        })
+      });
+
+      // Update the search args for pagination
+      args.maxPages = result.paginationOutput[0].totalPages[0] > 100 ? 100 : result.paginationOutput[0].totalPages[0];
+      if(args.currentPage < args.maxPages) {
+        args.currentPage = args.currentPage + 1;
+        getAllResults(args);
       } else {
-        var result = result.findItemsByKeywordsResponse[0];
-        //var totalEntries = result.paginationOutput[0].totalEntries[0];
-
-        // TODO: Handle pagination. This only handles the first page.
-        // This will also likely throw an exception for results > 100
-        result.searchResult[0].item.forEach(function(item) {
-          //console.log(item);
-          indexer(item.itemId[0], item, function(err, response) {
-            if(err){
-              console.error("Encountered an error indexing!", err);
-            } else {
-              console.log("Response from ES index request: " + response);
-            }
-          })
-        });
+        console.log("Reached end of all pages for query " + query);
       }
-    });
-});
+    }
+  });
+}
