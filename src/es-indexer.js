@@ -5,20 +5,33 @@ var client = new elasticsearch.Client({
 });
 
 //var index = "ebay";
-var index = "test";
+var index = "test2";
 var type = "searchResults";
 
-module.exports = function(id, data, callback) {
-  client.index({
-    index: index,
-    type: type,
-    id: id,
-    body: data
-  }, function (error, response) {
-    if(error) {
-      callback(error);
-    } else {
-      callback(null, response);
+module.exports = {
+    index: function(id, data, callback) {
+      client.index({
+        index: index,
+        type: type,
+        id: id,
+        body: data
+      }, function (error, response) {
+        if(error) {
+          callback(error);
+        } else {
+          callback(null, response);
+        }
+      });
+    },
+    ping: function(callback) {
+      client.ping({
+
+      }, function(error, response) {
+        if(error) {
+          callback(error);
+        } else {
+          callback(null, response);
+        }
+      });
     }
-  });
 }

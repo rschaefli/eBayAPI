@@ -37,44 +37,46 @@ var makeApiQuery = function(args, cb) {
   });
 }
 
+// Give Elaticsearch time to come up
+setTimeout(function(err, response) {
+  //schedule.scheduleJob(cronPattern, function() {
+  //    console.log('Cron job running..');
+      //TODO: Rename to queryArgs, store query and operationName in here as well?
+      var args = {};
+      args.currentPage = 1;
+      args.maxPages = 100;
 
-//schedule.scheduleJob(cronPattern, function() {
-//    console.log('Cron job running..');
-    //TODO: Rename to queryArgs, store query and operationName in here as well?
-    var args = {};
-    args.currentPage = 1;
-    args.maxPages = 100;
+      getAllResults(args);
+  //});
 
-    getAllResults(args);
-//});
-
-function getAllResults(args) {
-  makeApiQuery(args, function callback(err, result) {
-    if(err) {
-      console.log("Got error: " + err);
-    } else {
-      var result = result[responseFieldName][0];
-      // Process each item in the results
-      result.searchResult[0].item.forEach(function(item) {
-        item.searchQuery = query;
-        // Index each item with Elasticsearch
-        indexer(item.itemId[0], item, function(err, response) {
-          if(err){
-            console.error("Encountered an error indexing!", err);
-          } else {
-            console.log("Response from ES index request: " + response);
-          }
-        })
-      });
-
-      // Update the search args for pagination
-      args.maxPages = result.paginationOutput[0].totalPages[0] > 100 ? 100 : result.paginationOutput[0].totalPages[0];
-      if(args.currentPage < args.maxPages) {
-        args.currentPage = args.currentPage + 1;
-        getAllResults(args);
+  function getAllResults(args) {
+    makeApiQuery(args, function callback(err, result) {
+      if(err) {
+        console.log("Got error: " + err);
       } else {
-        console.log("Reached end of all pages for query " + query);
+        var result = result[responseFieldName][0];
+        // Process each item in the results
+        result.searchResult[0].item.forEach(function(item) {
+          item.searchQuery = query;
+          // Index each item with Elasticsearch
+          indexer.index(item.itemId[0], item, function(err, response) {
+            if(err){
+              console.error("Encountered an error indexing!", err);
+            } else {
+              console.log("Response from ES index request: " + response);
+            }
+          })
+        });
+
+        // Update the search args for pagination
+        args.maxPages = result.paginationOutput[0].totalPages[0] > 100 ? 100 : result.paginationOutput[0].totalPages[0];
+        if(args.currentPage < args.maxPages) {
+          args.currentPage = args.currentPage + 1;
+          getAllResults(args);
+        } else {
+          console.log("Reached end of all pages for query " + query);
+        }
       }
-    }
-  });
-}
+    });
+  }
+}, 20000);
